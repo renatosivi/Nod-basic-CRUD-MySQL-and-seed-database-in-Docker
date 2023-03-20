@@ -1,7 +1,9 @@
 const express = require('express');
 const {connection} = require('./database.js');
+const cors = require('cors');
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 app.get('/tipos', (_req, res) => {
@@ -36,7 +38,9 @@ app.post('/cliente/gravar', (req, res) => {
 });
 
 app.get('/cliente/buscar/email/:email', (req, res) => {
-  connection.query('SELECT customers.*, customerTypes.name AS customerType FROM customers JOIN customerTypes WHERE customers.email = ?;', [req.params.email], (err, result) => {
+  const query = 'SELECT customers.*, customerTypes.name AS customerType FROM customers JOIN customerTypes ON customers.customerTypes_id = customerTypes.customerTypes_id WHERE customers.email = ?;';
+
+  connection.query(query, [req.params.email], (err, result) => {
     if (err) {
       res.sendStatus(500);
       return;
@@ -47,7 +51,9 @@ app.get('/cliente/buscar/email/:email', (req, res) => {
 });
 
 app.get('/cliente/buscar/id/:id', (req, res) => {
-  connection.query('SELECT customers.*, customerTypes.name AS customerType FROM customers JOIN customerTypes WHERE customers.customers_id = ?;', [req.params.id], (err, result) => {
+  const query = 'SELECT customers.*, customerTypes.name AS customerType FROM customers JOIN customerTypes ON customers.customerTypes_id = customerTypes.customerTypes_id WHERE customers.customers_id = ?;';
+
+  connection.query(query, [req.params.id], (err, result) => {
     if (err) {
       res.sendStatus(500);
       return;
