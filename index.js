@@ -1,6 +1,7 @@
 const express = require('express');
 const {connection} = require('./database.js');
 const cors = require('cors');
+const multer = require('multer');
 
 const app = express();
 app.use(cors());
@@ -20,7 +21,7 @@ app.get('/tipos', (_req, res) => {
 
 const customerTypes = {'preferencial': 1, 'bronze': 2, 'prata': 3, 'ouro': 4, 'black': 5};
 
-app.post('/cliente/gravar', (req, res) => {
+app.post('/cliente/gravar', multer().none(), (req, res) => {
   const query = 'INSERT INTO customers (name, phone, email, addressType, number, complement, district, city, state, zipCode, customerTypes_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);';
 
   const {nome, telefone, email, logradouro, numero, complemento, bairro, cidade, uf, cep, tipoDeCliente} = req.body;
